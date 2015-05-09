@@ -25,6 +25,9 @@ angular.module('suttor', ['ionic'])
 .controller('CounterController', function($scope, $localstorage){
   var currentDate = new Date();
   var lastDate = new Date($localstorage.get('lastDate') || null);
+  var smokeEntries = [];
+
+  smokeEntries = $localstorage.getObject('smokeEntries');
   this.count = Number($localstorage.get('count') || '0');
   // console.log(this.count);
 
@@ -38,21 +41,32 @@ angular.module('suttor', ['ionic'])
       };
     };
   };
-  // console.log(this.count);
 
   $localstorage.set('lastDate', currentDate);
   $localstorage.set('count', this.count);
 
   this.addCount = function() {
     this.count++;
-    console.log(this.count);
+    // console.log(this.count);
     $localstorage.set('count', this.count);
+    var time = new Date();
+    smokeEntries.push({
+      'time': time
+    });
+    console.log(smokeEntries);
+    $localstorage.setObject('smokeEntries', smokeEntries);
   };
 
   this.subtractCount = function() {
     this.count--;
+    if (this.count < 0) {
+      this.count = 0;
+    };
     // console.log(this.count);
     $localstorage.set('count', this.count);
+    smokeEntries.pop();
+    console.log(smokeEntries);
+    $localstorage.setObject('smokeEntries', smokeEntries);
   };
 })
 
