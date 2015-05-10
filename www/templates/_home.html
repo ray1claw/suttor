@@ -2,24 +2,26 @@
   <!-- <ion-header-bar class="bar-stable">
     <h1 class="title">Ionic Blank Starter</h1>
   </ion-header-bar> -->
-  <ion-content ng-controller="CounterController as counter">
+  <ion-content scroll="false" ng-controller="CounterController as counter">
     <section class="section--counter">
       <div class="row">
         <h1>{{counter.count}}</h1>
       </div>
-      <div class="row">
-        <h5>cigarettes today</h5>
+      <p>cigarettes today</p>
+    </section>
+    <section class="section--add-button">
+      <div class="row button-add">
+        <button class="button button-block button-positive" ng-click="counter.addCount()">
+          <i class="icon ion-plus"></i>
+        </button>
+      </div>
+      <div class="row button-undo">
+        <button class="button button-light" ng-click="counter.subtractCount()">
+          <i class="icon ion-arrow-return-left"></i>
+        </button>
       </div>
     </section>
-    <section class="row section--add-button">
-      <button class="button button-block button-positive" ng-click="counter.addCount()">
-        <i class="icon ion-plus"></i>
-      </button>
-      <button class="button button-block button-light" ng-click="counter.subtractCount()">
-        <i class="icon ion-arrow-return-left"></i>
-      </button>
-    </section>
-    <button class="button" ui-sref="stats">
+    <button class="button button-stats" ui-sref="stats">
       <i class="icon ion-stats-bars"></i>
     </button>
   </ion-content>

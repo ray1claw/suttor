@@ -1,11 +1,19 @@
-<ion-content ng-controller="ChartController as chart">
-  <div class="row row-center">
-    <canvas id="smokeChart"></canvas>
-  </div>
-  <div class="row row-bottom">
-    <h1>&#8377; {{chart.weekCost}}</h1>
-    <h5>this week</h5>
-  </div>
-  <div class="row">
-  </div>
+<ion-content scroll="false" ng-controller="ChartController as chart">
+  <section class="section--graph">
+    <div class="row">
+      <h5>The Damage Report</h5>
+    </div>
+    <div class="row row-center">
+      <canvas id="smokeChart"></canvas>
+    </div>
+  </section>
+
+  <section class="section--cost">
+    <div class="row">
+      <h1>&#8377; {{chart.weekCost}}</h1>
+    </div>
+    <div class="row">
+      <h6>spent this week</h6>
+    </div>
+  </section>
 </ion-content>

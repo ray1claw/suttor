@@ -15,9 +15,117 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+// Include custom fonts
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+$font-family-sans-serif:          "Montserrat", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+$font-family-light-sans-serif:    "Montserrat", "HelveticaNeue-Light", "Roboto-Light", "Segoe UI-Light", sans-serif-light;
+
+$font-size-base:                  18px;
+$font-size-large:                 24px;
+$font-size-small:                 11px;
+$font-size-huge:                  $font-size-large * 3;
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.section--counter {
+  height: 50%;
+  background: $dark;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+
+  h1,
+  p {
+    position: absolute;
+    width: 100%;
+    margin: 0 auto;
+    color: $light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    bottom: 50%;
+    font-size: $font-size-huge;
+  }
+
+  p {
+    bottom: 40%;
+    font-size: $font-size-small;
+  }
+}
+
+.section--add-button {
+  height: 50%;
+  background: rgb(255,255,255); /* Old browsers */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(246,246,246,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* W3C */
+
+  .button-add {
+    position: relative;
+    top: -25%;
+    font-size: $font-size-large;
+
+    .button {
+      height: 100px;
+      width: 100px;
+      margin: 0 auto;
+      border-radius: 50%;
+    }
+  }
+
+  .button-undo {
+    position: absolute;
+    bottom: 0;
+
+    .button {
+      // width: 100%;
+      margin: 0 auto;
+      border: none;
+      background: transparent;
+    }
+  }
+}
+
+.button-stats {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  color: $light;
+}
+
+.section--graph {
+  h5,
+  canvas {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  canvas {
+    width: 90%;
+  }
+}
+
+.section--cost {
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  bottom: 0;
+  background: #2c539e; /* Old browsers */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2c539e), color-stop(100%,#4a1754)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #2c539e 0%,#4a1754 100%); /* Chrome10+,Safari5.1+ */
+  background: linear-gradient(to bottom,  #2c539e 0%,#4a1754 100%); /* W3C */
+
+  h1,
+  h6 {
+    color: $light;
+    margin: 0 auto;
+  }
+}

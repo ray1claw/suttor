@@ -100,8 +100,8 @@ angular.module('suttor', ['ionic'])
       datasets: [
         {
           label: "CountChart",
-          fillColor: "rgba(220,220,220,0.5)",
-          strokeColor: "rgba(220,220,220,0.8)",
+          fillColor: "rgba(255, 103, 13, 0.5)",
+          strokeColor: "rgba(255, 103, 13, 0.8)",
           highlightFill: "rgba(220,220,220,0.75)",
           highlightStroke: "rgba(220,220,220,1)",
           data: [0,0,0,0,0,0,0]
@@ -138,7 +138,8 @@ angular.module('suttor', ['ionic'])
   var ctx = document.getElementById("smokeChart").getContext("2d");
   var myNewChart = new Chart(ctx).Line(data, {
     barShowStroke: false,
-    bezierCurveTension : 0.2
+    bezierCurveTension : 0.2,
+    scaleGridLineColor : "rgba(0,0,0,0)"
   });
 })
 
