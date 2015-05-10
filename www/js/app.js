@@ -5,6 +5,19 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('suttor', ['ionic'])
 
+.config(function($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/')
+
+  $stateProvider.state('home', {
+    url: '/',
+    templateUrl: 'templates/_home.html'
+  })
+  .state('stats', {
+    url: '/stats',
+    templateUrl: 'templates/_stats.html'
+  })
+})
+
 .factory('$localstorage', ['$window', function($window) {
   return {
     set: function(key, value) {
@@ -51,7 +64,7 @@ angular.module('suttor', ['ionic'])
     $localstorage.set('count', this.count);
     var time = new Date();
     smokeEntries.push({
-      'time': time
+      'entrytime': time
     });
     console.log(smokeEntries);
     $localstorage.setObject('smokeEntries', smokeEntries);
@@ -68,6 +81,65 @@ angular.module('suttor', ['ionic'])
     console.log(smokeEntries);
     $localstorage.setObject('smokeEntries', smokeEntries);
   };
+})
+
+.controller('ChartController', function($scope, $localstorage){
+
+  var cigPrice = 11;
+
+  var chartdates = [];
+  this.weekCost = 0;
+
+  chartdates = $localstorage.getObject('smokeEntries');
+  console.log(chartdates);
+
+  var today = new Date;
+
+  var data = {
+      labels: [today.getDate()-7,today.getDate()-6,today.getDate()-5,today.getDate()-4,today.getDate()-2,today.getDate()-1,today.getDate()],
+      datasets: [
+        {
+          label: "CountChart",
+          fillColor: "rgba(220,220,220,0.5)",
+          strokeColor: "rgba(220,220,220,0.8)",
+          highlightFill: "rgba(220,220,220,0.75)",
+          highlightStroke: "rgba(220,220,220,1)",
+          data: [0,0,0,0,0,0,0]
+        }
+
+        // {
+        //     label: "PriceChart",
+        //     fillColor: "rgba(151,187,205,0.5)",
+        //     strokeColor: "rgba(151,187,205,0.8)",
+        //     highlightFill: "rgba(151,187,205,0.75)",
+        //     highlightStroke: "rgba(151,187,205,1)",
+        //     data: [0,0,0,0,0,0,0]
+        // }
+      ]
+  };
+
+  for(var i = data['labels'].length -1; i>=0; i--){
+
+    for (var j = chartdates.length - 1; j >= 0; j--) {
+
+      var tempDate = new Date(chartdates[j]['entrytime']);
+      var tempgetDate = tempDate.getDate();
+      console.log('TempgetDate: '+tempgetDate);
+
+      if(data['labels'][i] == tempgetDate){
+        console.log('LabelDate: '+data['labels'][i]);
+        data['datasets'][0]['data'][i]++;
+        this.weekCost+=cigPrice;
+        console.log('CountChart: '+data['datasets'][0]['data']);
+      };
+    };
+  };
+
+  var ctx = document.getElementById("smokeChart").getContext("2d");
+  var myNewChart = new Chart(ctx).Line(data, {
+    barShowStroke: false,
+    bezierCurveTension : 0.2
+  });
 })
 
 .run(function($ionicPlatform) {
