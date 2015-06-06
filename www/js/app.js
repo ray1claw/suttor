@@ -38,9 +38,9 @@ angular.module('suttor', ['ionic'])
 .controller('CounterController', function($scope, $localstorage){
   var currentDate = new Date();
   var lastDate = new Date($localstorage.get('lastDate') || null);
-  var smokeEntries = [];
 
-  smokeEntries = $localstorage.getObject('smokeEntries');
+  var smokeEntries = $localstorage.getObject('smokeEntries');
+  console.log(smokeEntries);
   this.count = Number($localstorage.get('count') || '0');
   // console.log(this.count);
 
@@ -60,7 +60,6 @@ angular.module('suttor', ['ionic'])
 
   this.addCount = function() {
     this.count++;
-    // console.log(this.count);
     $localstorage.set('count', this.count);
     var time = new Date();
     smokeEntries.push({
@@ -75,7 +74,6 @@ angular.module('suttor', ['ionic'])
     if (this.count < 0) {
       this.count = 0;
     };
-    // console.log(this.count);
     $localstorage.set('count', this.count);
     smokeEntries.pop();
     console.log(smokeEntries);
