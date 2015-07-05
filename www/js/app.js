@@ -83,10 +83,9 @@ angular.module('suttor', ['ionic'])
 
 .controller('ChartController', function($scope, $localstorage){
 
-  var cigPrice = 11;
-
   var chartdates = [];
   this.weekCost = 0;
+  this.cigPrice = 12;
 
   chartdates = $localstorage.getObject('smokeEntries');
   console.log(chartdates);
@@ -127,7 +126,7 @@ angular.module('suttor', ['ionic'])
       if(data['labels'][i] == tempgetDate){
         console.log('LabelDate: '+data['labels'][i]);
         data['datasets'][0]['data'][i]++;
-        this.weekCost+=cigPrice;
+        this.weekCost+=this.cigPrice;
         console.log('CountChart: '+data['datasets'][0]['data']);
       };
     };

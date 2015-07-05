@@ -15,5 +15,22 @@
     <div class="row">
       <h6>spent this week</h6>
     </div>
+    <div class="row">
+      <p>
+        &#8377; {{chart.cigPrice}} per cigarette <button class="button" ng-click="openCigPriceEdit($event)"><i class="icon ion-edit"></i></button>
+      </p>
+    </div>
   </section>
 </ion-content>
+
+<script id="cig-price-edit.html" type="text/ng-template">
+  <div class="item-input-inset">
+    <label class="item item-input-wrapper">
+      <span class="input-label">&#8377;</span>
+      <input type="number" ng-model="chart.cigPrice" id="cig-price-input">
+    </label>
+    <button class="button button-positive" ng-click="closeCigPriceEdit($event)">
+      Done
+    </button>
+  </div>
+</script>
