@@ -29,39 +29,45 @@ angular.module('suttor', ['ionic'])
     setObject: function(key, value) {
       $window.localStorage[key] = JSON.stringify(value);
     },
-    getObject: function(key) {
-      return JSON.parse($window.localStorage[key] || '{}');
+    getObject: function(key, defaultValue) {
+      return JSON.parse($window.localStorage[key] || defaultValue);
     }
   }
 }])
 
 .controller('CounterController', function($scope, $localstorage){
-  var currentDate = new Date();
-  var lastDate = new Date($localstorage.get('lastDate') || null);
-  var smokeEntries = [];
+  var currentDate = moment();
+  var lastDate = moment($localstorage.getObject('lastDate', null));
+  console.log(currentDate);
+  console.log(lastDate);
 
-  smokeEntries = $localstorage.getObject('smokeEntries');
+  var smokeEntries = $localstorage.getObject('smokeEntries', '[]');
+
   this.count = Number($localstorage.get('count') || '0');
   // console.log(this.count);
 
   if (lastDate != null) {
-    // if ((currentDate.getTime() - lastDate.getTime())/(1000 * 3600 * 24) >= 1) {
-    if (lastDate.getFullYear() <= currentDate.getFullYear()) {
-      if (lastDate.getMonth() <= currentDate.getMonth()) {
-        if (lastDate.getDate() < currentDate.getDate()) {
-          this.count = 0;
-        };
-      };
+    if (lastDate.isBefore(currentDate, 'day')) {
+      this.count = 0;
     };
+    // if ((currentDate.getTime() - lastDate.getTime())/(1000 * 3600 * 24) >= 1) {
+    // if (lastDate.getFullYear() <= currentDate.getFullYear()) {
+    //   if (lastDate.getMonth() <= currentDate.getMonth()) {
+    //     if (lastDate.getDate() < currentDate.getDate()) {
+    //       this.count = 0;
+    //     };
+    //   };
+    // };
+
   };
 
-  $localstorage.set('lastDate', currentDate);
+  $localstorage.setObject('lastDate', currentDate);
   $localstorage.set('count', this.count);
 
   this.addCount = function() {
     this.count++;
     $localstorage.set('count', this.count);
-    var time = new Date();
+    var time = moment();
     smokeEntries.push({
       'entrytime': time
     });
@@ -82,18 +88,15 @@ angular.module('suttor', ['ionic'])
 })
 
 .controller('ChartController', function($scope, $localstorage){
-
-  var chartdates = [];
   this.weekCost = 0;
   this.cigPrice = 12;
 
-  chartdates = $localstorage.getObject('smokeEntries');
-  console.log(chartdates);
+  var smokeEntries = $localstorage.getObject('smokeEntries');
 
-  var today = new Date;
+  var today = moment();
 
   var data = {
-      labels: [today.getDate()-7,today.getDate()-6,today.getDate()-5,today.getDate()-4,today.getDate()-2,today.getDate()-1,today.getDate()],
+      labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
       datasets: [
         {
           label: "CountChart",
@@ -115,20 +118,23 @@ angular.module('suttor', ['ionic'])
       ]
   };
 
-  for(var i = data['labels'].length -1; i>=0; i--){
+  for(var i = today; i.isAfter(today.startOf('week')) || i.isSame(today.startOf('week')); i.subtract(1, 'days')){
 
-    for (var j = chartdates.length - 1; j >= 0; j--) {
+    for (var j = smokeEntries.length - 1; j >= 0; j--) {
 
-      var tempDate = new Date(chartdates[j]['entrytime']);
-      var tempgetDate = tempDate.getDate();
-      console.log('TempgetDate: '+tempgetDate);
-
-      if(data['labels'][i] == tempgetDate){
-        console.log('LabelDate: '+data['labels'][i]);
-        data['datasets'][0]['data'][i]++;
-        this.weekCost+=this.cigPrice;
-        console.log('CountChart: '+data['datasets'][0]['data']);
+      var tempDate = moment(smokeEntries[j]['entrytime']);
+      // var tempgetDate = tempDate.date();
+      console.log(i.day());
+      console.log(tempDate);
+      console.log(i.isSame(tempDate, 'day'));
+      if(i.isSame(tempDate, 'date')) {
+        // console.log('LabelDate: '+data['labels'][i.day()-1]);
+        data['datasets'][0]['data'][i.day()-1]++;
+        this.weekCost += this.cigPrice;
+        // console.log('CountChart: '+data['datasets'][0]['data']);
       };
+
+      /*break inner loop for before start of week*/
     };
   };
 
