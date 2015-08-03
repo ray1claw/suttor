@@ -36,10 +36,9 @@ angular.module('suttor', ['ionic'])
 }])
 
 .controller('CounterController', function($scope, $localstorage){
+  moment.locale('en-gb');
   var currentDate = moment();
-  var lastDate = moment($localstorage.getObject('lastDate', null));
-  console.log(currentDate);
-  console.log(lastDate);
+  var lastDate = moment($localstorage.getObject('lastDate', '{}'));
 
   var smokeEntries = $localstorage.getObject('smokeEntries', '[]');
 
@@ -90,10 +89,10 @@ angular.module('suttor', ['ionic'])
 .controller('ChartController', function($scope, $localstorage){
   this.weekCost = 0;
   this.cigPrice = 12;
+  this.weekStart = moment().startOf('week');
+  this.weekEnd = moment().endOf('week');
 
-  var smokeEntries = $localstorage.getObject('smokeEntries');
-
-  var today = moment();
+  var smokeEntries = $localstorage.getObject('smokeEntries', '{}');
 
   var data = {
       labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -118,25 +117,40 @@ angular.module('suttor', ['ionic'])
       ]
   };
 
-  for(var i = today; i.isAfter(today.startOf('week')) || i.isSame(today.startOf('week')); i.subtract(1, 'days')){
+  var getData = function (start, end) {
 
-    for (var j = smokeEntries.length - 1; j >= 0; j--) {
+    for(var i = moment(end); i.isAfter(start) || i.isSame(start, 'day'); i.subtract(1, 'days')) {
+      //var selectedDay = data['datasets'][0]['data'][i.weekday()];
 
-      var tempDate = moment(smokeEntries[j]['entrytime']);
-      // var tempgetDate = tempDate.date();
-      console.log(i.day());
-      console.log(tempDate);
-      console.log(i.isSame(tempDate, 'day'));
-      if(i.isSame(tempDate, 'date')) {
-        // console.log('LabelDate: '+data['labels'][i.day()-1]);
-        data['datasets'][0]['data'][i.day()-1]++;
-        this.weekCost += this.cigPrice;
-        // console.log('CountChart: '+data['datasets'][0]['data']);
+      for (var j = smokeEntries.length - 1; j >= 0; j--) {
+        console.log("Yo")
+        var tempDate = moment(smokeEntries[j]['entrytime']);
+
+        if(i.isSame(tempDate, 'day')) {
+          //data.datasets[0].data[i.day()-1]++;
+          data['datasets'][0]['data'][i.weekday()] += 1;
+          this.weekCost += this.cigPrice;
+          console.log("bo")
+          console.log(data['datasets'][0]['data'])
+        } else {
+          data['datasets'][0]['data'][i.weekday()] = 0;
+          console.log("sho")
+          console.log(data['datasets'][0]['data'])
+
+        };
+
+        // console.log(data['datasets'][0]['data']);
+
+        /*break inner loop for before start of week*/
+        if (tempDate.isBefore(start)) {
+          break;
+        };
       };
-
-      /*break inner loop for before start of week*/
     };
   };
+
+  getData(this.weekStart, this.weekEnd);
+
 
   var ctx = document.getElementById("smokeChart").getContext("2d");
   var myNewChart = new Chart(ctx).Line(data, {
@@ -144,6 +158,40 @@ angular.module('suttor', ['ionic'])
     bezierCurveTension : 0.2,
     scaleGridLineColor : "rgba(0,0,0,0)"
   });
+
+  this.prevWeek = function () {
+    this.weekStart.subtract(1, 'weeks');
+    this.weekEnd.subtract(1, 'weeks');
+    getData(this.weekStart, this.weekEnd);
+
+    //myNewChart.datasets[0]['data'] = data['datasets'][0]['data'];
+    //myNewChart.update();
+
+    var myNewChart = new Chart(ctx).Line(data, {
+      barShowStroke: false,
+      bezierCurveTension : 0.2,
+      scaleGridLineColor : "rgba(0,0,0,0)"
+    });
+    console.log(data['datasets'][0]['data']);
+  };
+
+  this.nextWeek = function () {
+    this.weekStart.add(1, 'weeks');
+    this.weekEnd.add(1, 'weeks');
+    getData(this.weekStart, this.weekEnd);
+
+    //myNewChart.datasets[0]['data'] = data['datasets'][0]['data'];
+    //myNewChart.update();
+
+    var myNewChart = new Chart(ctx).Line(data, {
+      barShowStroke: false,
+      bezierCurveTension : 0.2,
+      scaleGridLineColor : "rgba(0,0,0,0)"
+    });
+    console.log(data['datasets'][0]['data']);
+  };
+
+
 })
 
 .run(function($ionicPlatform) {

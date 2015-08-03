@@ -1,12 +1,21 @@
-<ion-content scroll="false" ng-controller="ChartController as chart">
+<ion-content scroll="false" ng-controller="ChartController as chart" on-swipe-left="prevWeek()" on-swipe-right="nextWeek()">
   <section class="section--graph">
     <div class="row">
       <h5>The Damage Report</h5>
+    </div>
+    <div class="row">
+      <h6>{{chart.weekStart.format("MMMM Do")}} - {{chart.weekEnd.format("MMMM Do")}}</h6>
     </div>
     <div class="row row-center">
       <canvas id="smokeChart"></canvas>
     </div>
   </section>
+  <button class="button button-positive" ng-click="chart.prevWeek()">
+      Done
+    </button>
+    <button class="button button-positive" ng-click="chart.nextWeek()">
+      to
+    </button>
 
   <section class="section--cost">
     <div class="row">
